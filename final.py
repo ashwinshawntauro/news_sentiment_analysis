@@ -1,3 +1,4 @@
+# Import necessary libraries
 from flask import Flask, render_template
 import requests
 from bs4 import BeautifulSoup
@@ -33,7 +34,15 @@ def analyze_sentiment(text):
     neutral_threshold = 0.1
     positive_threshold = 0.2
 
-    if blob.sentiment.polarity > positive_threshold:
+    positive_keywords = ['strong', 'positive' ,'premium', 'soars', 'profit', 'bullish' ,'growth', 'high', 'upside', 'rally', 'rise', 'raises', 'buy', 'zooms', 'uptrend','highest','jump','up']
+    negative_keywords = ['negative', 'weak', 'decline' , 'loss', 'bearish', 'sell-of', 'slump', 'underperform', 'downgrade', 'plunge', 'turmoil', 'panic', 'correction', 'volatility', 'downtrend','lowest','fall','down']
+
+    # Check if any positive keyword is in the cleaned text
+    if any(word in text for word in positive_keywords):
+        sentiment = "Positive"
+    elif any(word in text for word in negative_keywords):
+        sentiment = "Negative"
+    elif blob.sentiment.polarity > positive_threshold:
         sentiment = "Positive"
     elif blob.sentiment.polarity < -positive_threshold:
         sentiment = "Negative"
@@ -56,11 +65,14 @@ def fetch_news():
         img = article.find('img')['data-src']
         img = img.replace("width=135", "width=770")  # Change width to 200
         img = img.replace("height=80", "height=443")
+        # Fetch the date of the news article
+        date = article.find('span').text.strip()
         articles.append({
             'title': title,
             'summary': summary,
             'link': link,
-            'image': img
+            'image': img,
+            'date': date  # Add date to the dictionary
         })
 
     return articles
