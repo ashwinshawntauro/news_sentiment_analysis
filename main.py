@@ -27,7 +27,7 @@ def analyze_sentiment(text):
   return sentiment
 
 # Sample usage
-news_text = "No noise"
+news_text = "I havE A better DAY than yesterday"
 sentiment = analyze_sentiment(news_text)
 
 print(f"Text: {news_text}")
