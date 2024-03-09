@@ -10,13 +10,39 @@
     <h1 class="text-center h2 text-primary m-3">Business News and Sentiment Analysis</h1>
     <div class="container">
         <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-2 text-center d-flex justify-content-evenly h-100 border-0">
+                    <div>
+                        <h5 class="card-title">Overall Sentiment</h5>
+                        {% if positive_count > negative_count and positive_count > neutral_count %}
+                            <h2 class="text-success fw-bold">Positive Sentiment</h2>
+                        {% elif neutral_count > negative_count and neutral_count > positive_count %}
+                            <h2 class="text-warning fw-bold">Neutral Sentiment</h2>
+                        {% elif negative_count > positive_count and negative_count > neutral_count %}
+                            <h2 class="text-danger fw-bold">Negative Sentiment</h2>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ positive_percent }}%;" aria-valuenow="{{ positive_percent }}" aria-valuemin="0" aria-valuemax="100">{{ positive_percent }}%</div>
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ neutral_percent }}%;" aria-valuenow="{{ neutral_percent }}" aria-valuemin="0" aria-valuemax="100">{{ neutral_percent }}%</div>
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ negative_percent }}%;" aria-valuenow="{{ negative_percent }}" aria-valuemin="0" aria-valuemax="100">{{ negative_percent }}%</div>
+                        </div>
+                    </div>
+                    <div>
+                        Positive: {{ positive_count }} ({{ positive_percent }}%)<br>
+                        Negative: {{ negative_count }} ({{ negative_percent }}%)<br>
+                        Neutral: {{ neutral_count }} ({{ neutral_percent }}%)<br>
+                    </div>
+                </div>
+            </div>
             {% for article in articles %}
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card article mb-2">
                     <img src="{{ article.image }}" class="card-img-top" alt="{{ article.title }}">
                     <div class="card-body">
                         <h5 class="card-title title">{{ article.title }}</h5>
-                        <h8 class="card-subtitle text-secondary">{{article.date}}</h8>
+                        <small class="card-subtitle text-secondary">{{ article.date }}</small>
                         {% if article.sentiment == 'Positive' %}
                             <h6 class="badge bg-success mb-2 text-white sentiment w-100">{{ article.sentiment }}</h6>
                         {% elif article.sentiment == 'Negative' %}

@@ -83,6 +83,11 @@ def home():
     # Fetch news articles
     articles = fetch_news()
 
+    # Initialize counts for sentiments
+    positive_count = 0
+    negative_count = 0
+    neutral_count = 0
+
     # Analyze sentiment for each article
     for article in articles:
         title = article['title']
@@ -96,7 +101,21 @@ def home():
         sentiment = analyze_sentiment(text)
         article['sentiment'] = sentiment
 
-    return render_template('index.html', articles=articles)
+        # Count the sentiments
+        if sentiment == 'Positive':
+            positive_count += 1
+        elif sentiment == 'Negative':
+            negative_count += 1
+        else:
+            neutral_count += 1
+
+    # Calculate percentages
+    total_count = len(articles)
+    positive_percent = (positive_count / total_count) * 100 if total_count > 0 else 0
+    negative_percent = (negative_count / total_count) * 100 if total_count > 0 else 0
+    neutral_percent = (neutral_count / total_count) * 100 if total_count > 0 else 0
+
+    return render_template('index.html', articles=articles, positive_count=positive_count, negative_count=negative_count, neutral_count=neutral_count, positive_percent=positive_percent, negative_percent=negative_percent, neutral_percent=neutral_percent)
 
 if __name__ == '__main__':
     app.run(debug=True)
